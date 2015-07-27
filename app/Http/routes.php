@@ -11,6 +11,5 @@
 |
 */
 
-$app->get('/', function () use ($app) {
-    return $app->welcome();
-});
+$app->get('/', 'Controller@home');
+$app->get('/about', 'Controller@about');

@@ -1,0 +1,5 @@
+
+/**
+ * Bottstrap navbar-fixed-top need body padding-top
+ */
+body { padding-top: 70px; }
