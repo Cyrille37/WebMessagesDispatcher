@@ -1,0 +1,9 @@
+
+# Eclipse
+.settings/
+.project
+.buildpath
+
+# Lumen :
+/vendor
+.env
