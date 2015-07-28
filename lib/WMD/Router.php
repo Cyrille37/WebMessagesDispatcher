@@ -37,10 +37,14 @@ class Router {
 
 	public function postRoute( $data )
 	{
+		/**
+		 * 
+		 * @var \App\Models\Route
+		 */
 		$route = \App\Models\Route::create( $data );
 		$ok = $route->save();
 		if( ! $ok){
-			throw new \Exception('Failed to create route');
+			throw new \Exception('Failed to create route ('.$route->getErrors() );
 		}
 		return $route ;
 	}
