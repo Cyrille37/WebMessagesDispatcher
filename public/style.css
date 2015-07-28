@@ -1,5 +1,24 @@
 
 /**
- * Bottstrap navbar-fixed-top need body padding-top
+ * Bootstrap navbar-fixed-top need body padding-top
  */
+
 body { padding-top: 70px; }
+
+/**
+ * Form style
+ */
+
+.form-group {
+    margin-bottom: .5em;
+}
+
+.help-block {
+    margin-bottom: .5em;
+}
+
+.error {
+	color: red;
+    font-style: italic;
+    font-size: 80%;
+}

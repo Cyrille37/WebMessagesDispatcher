@@ -10,7 +10,6 @@
 	<link type="text/css" rel="stylesheet" href="/jquery-ui-1.11.4.custom/jquery-ui.min.css" />
 	<link type="text/css" rel="stylesheet" href="/jquery-ui-1.11.4.custom/jquery-ui.structure.min.css" />
 	<link type="text/css" rel="stylesheet" href="/jquery-ui-1.11.4.custom/jquery-ui.theme.min.css" />
-
 @stop
 
 @section('content')
@@ -25,11 +24,11 @@
 	  	</div>
 	  	<div class="form-group">
 	  		<label for="srv_name">Nom du service:</label>
-	  		<input type="text" name="srv_name" id="srv_name" class="form-control" value="" />
+	  		<select name="srv_name" id="srv_name" class="form-control"></select>
 	  	</div>
 	  	<div class="form-group">
 	  		<label for="mod_name">Module de routage:</label>
-	  		<select name="mod_name" id="mod_name" class="form-control" />
+	  		<select name="mod_name" id="mod_name" class="form-control"></select>
 	  	</div>
 	  	<div class="form-group">
 	  		<label for="mod_params">Paramètre du routeur:</label>
@@ -45,12 +44,11 @@
 	  		<input type="text" name="to" id="to" class="form-control" value="" />
 	  		<p class="help-block">une "*" pour n'importe quel destinataire (tous).</p>
 	  	</div>
-	  	<button type="submit" class="btn btn-primary">Annuler</button>
-	  	<button type="submit" class="btn btn-primary">Enregister</button>
+	  	<button type="submit" class="btn btn-primary" id="save">Save</button>
 	  </form>
 	</div>
 
-	<table id="routes" class="table table-striped table-bordered">
+	<table id="routesGrid" class="table table-striped table-bordered">
 	</table>
 
 @stop
@@ -66,26 +64,80 @@
 	<script src="/jquery-validation-1.14.0/dist/localization/messages_fr.js"></script>
 	<script src="/jquery-validation-1.14.0/dist/additional-methods.min.js"></script>
 	<script type="text/javascript">
+	"use strict";
+
+	var CONST = {
+		DIALOGTYPE_ADD: 'Add',
+		EMPTY_OBJECT: {}
+	};
+	Object.freeze(CONST);
 
 	var db = {
+		// List of route services for IHM selects
+		routeServices: [],
+		// List of route modules for IHM selects
+		routeModules: [],
+		// jsGrid loadData
 		loadData: function(filter) {
-			return $.ajax({ type: "GET", data: filter, url: "/api/routes", dataType: "json" });
+			return $.ajax({ type: 'GET', data: filter, url: '/api/routes', dataType: 'json' });
 		},
+		// jsGrid insertItem
         insertItem: function(item) {
-            return $.ajax({ type: "POST", data: item, url: "/api/routes", dataType: "json" });
+            return $.ajax({ type: 'POST', data: item, url: '/api/routes', dataType: 'json' });
         },
+		// jsGrid updateItem
         updateItem: function(item) {
-            return $.ajax({ type: "PUT", data: item, url: "/api/routes", dataType: "json" });
+            return $.ajax({ type: 'PUT', data: item, url: '/api/routes', dataType: 'json' });
         },
+		// jsGrid deleteItem
         deleteItem: function(item) {
-            return $.ajax({ type: "DELETE", data: item, url: "/api/routes", dataType: "json" });
-        },
-        routerModules: [{id:'id1',name:'titi'},{id:'id2',name:'tata'}],
+            return $.ajax({ type: 'DELETE', data: item, url: '/api/routes', dataType: 'json' });
+        }
 	};
 
 	$(function() {
 
-		$("#routes").jsGrid({
+		function loadRouteServices() {
+			return $.getJSON('/api/routeServices', function(data){
+				db.routeServices = data ;
+				formSelectFill( 'srv_name', data );
+			});
+		}
+		function loadRouteModules() {
+			return $.getJSON('/api/routeModules', function(data){
+				db.routeModules = data ;
+				formSelectFill( 'mod_name', data );
+			});
+		}
+
+		$.when( loadRouteServices(), loadRouteModules() )
+			.then(
+			// allRequestsCompleteCallback	
+		    function(res1, res2) {
+				setupGrid();
+			},
+		    // someRequestFailedCallback()
+		    function(data) {
+			    alert('Failed to initialize IHM. Http status='+data.status);
+		    }
+		);
+
+	});
+
+	function formSelectFill( selectId, data, options ){
+
+		var fieldValue = options && options.fieldValue ? options.fieldValue : 'id' ;
+		var fieldLabel = options && options.fieldLabel ? options.fieldLabel : 'label' ;
+		var options = [];
+	    for (var i = 0; i < data.length; i++) {
+	        options.push('<option value="',data[i][fieldValue], '">',data[i][fieldLabel], '</option>');
+	    }
+	    $('#'+selectId).html(options.join(''));
+	}
+
+	function setupGrid(){
+		
+		$("#routesGrid").jsGrid({
 			width: "100%",
 			height: "400px",
 
@@ -112,9 +164,10 @@
 			fields: [
 				{ name: 'id', type: 'number' },
 				{ name: 'comment', type: 'text' },
-				{ name: 'srv_name', type: 'text' },
+				{ name: 'srv_name', type: 'select',
+					items: db.routeServices, valueField: 'id', textField: 'label', autosearch: true },
 				{ name: 'mod_name', type: 'select',
-					items: db.routerModules, valueField: 'id', textField: 'name', autosearch: true },
+					items: db.routeModules, valueField: 'id', textField: 'label', autosearch: true },
 				{ name: 'mod_params', type: 'text' },
 				{ name: 'from', type: 'text' },
 				{ name: 'to', type: 'text' },
@@ -126,78 +179,79 @@
 			            	.attr('type', 'button')
 			            	.text('Add')
 	                        .on('click', function () {
-	                        	//showDetailsDialog('Add', {});
-	                        	$("#routes").jsGrid("editItem", { id: "1" });
+	                        	showDetailsDialog( CONST.DIALOGTYPE_ADD, CONST.EMPTY_OBJECT );
+	                        	//$("#routes").jsGrid("editItem", { id: "1" });
 	                    	});
 		            }
                 }
 			]
 		});
 
-	    $("#detailsDialog").dialog({
+	    $('#detailsDialog').dialog({
 	        autoOpen: false,
 	        width: 400,
 	        close: function() {
-	            $("#detailsForm").validate().resetForm();
-	            $("#detailsForm").find(".error").removeClass("error");
+	            $('#detailsForm').validate().resetForm();
+	            $('#detailsForm').find('.error').removeClass('error');
 	        }
 	    });
 
 	    var formSubmitHandler = $.noop;
 
-	    var showDetailsDialog = function(dialogType, route) {
+	    var showDetailsDialog = function(dialogType, data) {
 
-			$("#comment").val(route.comment);
-			$("#srv_name").val(route.srv_name);
-			$("#mod_name").val(route.mod_name);
-			$("#from").val(route.from);
-			$("#to").val(route.to);
-			$("#mod_params").val(route.to);
+			$('#comment').val(data.comment);
+			$('#srv_name').val(data.srv_name);
+			$('#mod_name').val(data.mod_name);
+			$('#mod_params').val(data.to);
+			$('#from').val(data.from);
+			$('#to').val(data.to);
 
-	        formSubmitHandler = function() {
-				saveClient( route, dialogType === "Add");
-	        };
+			formSubmitHandler = function() {
+	        	saveClient( data, dialogType === CONST.DIALOGTYPE_ADD );
+	        }
 
-			$("#detailsDialog")
-				.dialog("option", "title", dialogType + " Route")
-				.dialog("open");
+			$('#detailsDialog')
+				.dialog('option', 'title', dialogType + ' Route')
+				.dialog('open');
 	    };
 
-	    $("#detailsForm").validate({
+	    $('#detailsForm').validate({
 	        rules: {
-				comment: "required",
-				srv_name: { required: true, minlength: 2 },
-				mod_name: { required: true, minlength: 2 },
-				from: "required",
-				to: "required",
+				comment: 'required',
+				srv_name: { required: true },
+				mod_name: { required: true },
+				from: 'required',
+				to: 'required',
 	        },
 	        messages: {
-	            comment: "Un commentaire est nécessaire",
-	            srv_name: "Un nom de service est nécessaire",
-	            mod_name: "Un nom de routeur est nécessaire",
-	            from: "Un identifiant d'émetteur est nécessaire",
-	            to: "Un identifiant de destinataire est nécessaire",
+	            comment: 'Un commentaire est nécessaire',
+	            srv_name: 'Un nom de service est nécessaire',
+	            mod_name: 'Un nom de routeur est nécessaire',
+	            from: 'Un identifiant d\'émetteur est nécessaire',
+	            to: 'Un identifiant de destinataire est nécessaire',
 	        },
+
 	        submitHandler: function() {
 	            formSubmitHandler();
 	        }
-	    });
+		});
 
-	    var saveClient = function(client, isNew) {
-	        $.extend(client, {
-	            Name: $("#name").val(),
-	            Age: parseInt($("#age").val(), 10),
-	            Address: $("#address").val(),
-	            Country: parseInt($("#country").val(), 10),
-	            Married: $("#married").is(":checked")
+	    var saveClient = function(data, isNew) {
+console.log('saveClient()');
+
+			$.extend(data, {
+	            comment: $('#comment').val(),
+	            srv_name: $('#srv_name').val(),
+	            mod_name: $('#mod_name').val(),
+	            mod_params: $('#mod_params').val(),
+	            from: $('#from').val(),
+	            to: $('#to').val(),
 	        });
-	 
-	        $("#jsGrid").jsGrid(isNew ? "insertItem" : "updateItem", client);
-	 
-	        $("#detailsDialog").dialog("close");
+	        $('#routesGrid').jsGrid(isNew ? 'insertItem' : 'updateItem', data);
+	        $('#detailsDialog').dialog('close');
 	    };
+	}
 
-	});
 	</script>
-
 @stop

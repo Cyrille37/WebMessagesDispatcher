@@ -31,6 +31,20 @@ class ApiController extends BaseController
 		return response()->json(array('status'=>'OK'));
 	}
 
+	public function routeModulesGet(\WMD\WebMessagesDispatcher $wmd)
+	{
+		return response()->json(
+			$wmd->getRouteModules()
+		);
+	}
+
+	public function routeServicesGet(\WMD\WebMessagesDispatcher $wmd)
+	{
+		return response()->json(
+			$wmd->getRouteServices()
+		);
+	}
+
 	/**
 	 * Routes GET : return all routes
 	 * @param \WMD\WebMessagesDispatcher $wmd

@@ -57,6 +57,24 @@ class WebMessagesDispatcher {
 
 	}
 
+	public function getRouteServices() {
+		return array(
+			array( 'id'=>'sms', 'label'=>'SMS' )
+		);
+	}
+
+	public function getRouteModules() {
+		
+		$routeModules = array();
+		foreach( $this->dispatchers as $modName => $module )
+		{
+			$routeModules[] = array(
+				'id' => $modName, 'label' => $modName
+			);
+		}
+		return $routeModules ;
+	}
+
 	public function getRouter()
 	{
 		return $this->router;

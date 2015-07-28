@@ -22,6 +22,9 @@ $app->group(['prefix' => 'api', 'namespace'=>'\App\\Http\\Controllers'], functio
 
 	$app->post('message_put', 'ApiController@message_put');
 
+	$app->get('routeModules', 'ApiController@routeModulesGet');
+	$app->get('routeServices', 'ApiController@routeServicesGet');
+
 	$app->get('routes', 'ApiController@routesGet');
 	$app->put('routes', 'ApiController@routesPut');
 	$app->post('routes', 'ApiController@routesPost');
