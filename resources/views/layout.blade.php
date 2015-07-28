@@ -55,11 +55,12 @@
 	</div>
 
 	@section('javascript')
-	<script type="text/javascript" src="/vendor/require.js"></script>
+	<!--script type="text/javascript" src="/vendor/require.js"></script-->
+	<script type="text/javascript" src="/vendor/jquery/jquery.min.js"></script>
 	<script type="text/javascript">
 	
-	require(['jquery'], function($) {
-	});
+	//require(['jquery'], function($) {
+	//});
 	</script>
 	@show
 

@@ -13,6 +13,7 @@
 
 $app->get('/', 'Controller@home');
 $app->get('/about', 'Controller@about');
+$app->get('/router', 'Controller@router');
 
 $app->group(['prefix' => 'api', 'namespace'=>'\App\\Http\\Controllers'], function ($app) {
 
@@ -21,6 +22,11 @@ $app->group(['prefix' => 'api', 'namespace'=>'\App\\Http\\Controllers'], functio
 
 	$app->post('message_put', 'ApiController@message_put');
 
+	$app->get('routes', 'ApiController@routesGet');
+	$app->put('routes', 'ApiController@routesPut');
+	$app->post('routes', 'ApiController@routesPost');
+	$app->delete('routes', 'ApiController@routesDelete');
+	
 /*
 	$app->get('messagesSet/{channelId:[0-9]+}', 'App\Http\Controllers\ApiController@getMessagesSet');
 	$app->get('messageStatus/{channelId:[0-9]+}/{messageId:[0-9]+}/{status}', 'App\Http\Controllers\ApiController@setMessageStatus');

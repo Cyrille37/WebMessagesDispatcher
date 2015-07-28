@@ -6,12 +6,14 @@
     "type": "project",
     "require": {
         "php": ">=5.5.9",
-        "laravel/lumen-framework": "5.1.*",
+        "laravel/lumen-framework": "^5.1",
         "vlucas/phpdotenv": "~1.0",
-		"esensi/model": "0.5.*",
-       	"robloach/component-installer": "*",
-		"components/jquery": "2.1.*",
-		"components/bootstrap-default": "3.3.*" 
+		"esensi/model": "^0.5.5",
+       	"robloach/component-installer": "^0.2.1",
+		"components/jquery": "^2.1",
+		"components/bootstrap-default": "^3.3",
+		"tabalinas/jsgrid": "1.1.0",
+		"bootstrap-plus/bootstrap-jqueryui": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",
@@ -35,5 +37,38 @@
         "preferred-install": "dist",
         "component-dir": "public/vendor",
 		"component-baseurl": "/vendor"
-    }
+    },
+	"repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "tabalinas/jsgrid",
+                "type": "component",
+                "version": "1.1.0",
+                "dist": {
+                    "url": "https://github.com/tabalinas/jsgrid/archive/v1.1.0.zip",
+                    "type": "zip"
+                },
+                "source": {
+                    "url": "https://github.com/tabalinas/jsgrid.git",
+                    "type": "git",
+                    "reference": "1.1.0"
+                },
+                "extra": {
+                    "component": {
+                        "scripts": [
+                            "dist/jsgrid.js"
+                        ],
+                        "styles": [
+                    		"dist/jsgrid.css",
+                            "dist/jsgrid-theme.css"
+                		]
+                    }
+                },
+                "require": {
+                    "robloach/component-installer": "*"
+                }
+            }
+        }
+    ]
 }

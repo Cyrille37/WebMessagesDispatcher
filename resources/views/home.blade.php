@@ -5,6 +5,8 @@
 
 @section('content')
 
+<h1>Web Messages Dispatcher (WMD)</h1>
+
 <p class="bg-primary">
 	La base de données contient
 	<span id="messagesCount">...</span> message(s)

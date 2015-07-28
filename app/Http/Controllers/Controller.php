@@ -16,4 +16,9 @@ class Controller extends BaseController
         return view('about');
     }
 
+    public function router()
+    {
+        return view('router');
+    }
+
 }
