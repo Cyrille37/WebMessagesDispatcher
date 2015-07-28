@@ -9,7 +9,9 @@
 	<meta name="author" content="The Citizen Crew & Co, Cyrille Giquello" />
 
 	@section('css')
-	<link rel="stylesheet" href="/vendor/require.css" />
+	<!-- link rel="stylesheet" href="/vendor/require.css" /-->
+	<link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap-theme.css" />	
 	<link rel="stylesheet" href="/style.css" />	
 	@show
 
@@ -57,6 +59,7 @@
 	@section('javascript')
 	<!--script type="text/javascript" src="/vendor/require.js"></script-->
 	<script type="text/javascript" src="/vendor/jquery/jquery.min.js"></script>
+	<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
 	<script type="text/javascript">
 	
 	//require(['jquery'], function($) {

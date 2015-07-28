@@ -20,13 +20,12 @@
 	@parent
 	<script type="text/javascript">
 
-	require(['jquery'], function($) {
+	$(function() {
 		$.getJSON( '/api/stats', function( data ) {
 			$('#messagesCount').text( data.messagesCount );
 			$('#routesCount').text( data.routesCount );
 		});
-		console.log('coucou');
 	});
-	</script>
 
+	</script>
 @stop

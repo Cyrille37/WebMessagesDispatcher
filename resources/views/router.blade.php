@@ -7,15 +7,38 @@
 	@parent
 	<link type="text/css" rel="stylesheet" href="/jsgrid-1.1.0/jsgrid.min.css" />
 	<link type="text/css" rel="stylesheet" href="/jsgrid-1.1.0/jsgrid-theme.min.css" />
+	<link type="text/css" rel="stylesheet" href="/jquery-ui-1.11.4.custom/jquery-ui.min.css" />
+	<link type="text/css" rel="stylesheet" href="/jquery-ui-1.11.4.custom/jquery-ui.structure.min.css" />
+	<link type="text/css" rel="stylesheet" href="/jquery-ui-1.11.4.custom/jquery-ui.theme.min.css" />
+
 @stop
 
 @section('content')
 
 <h1>Router</h1>
 
-<div id="detailsDialog" title="Basic dialog">
-  <form id="detailsForm"></form>
-</div>
+	<div id="detailsDialog" title="Basic dialog">
+	  <form id="detailsForm">
+	  	<div class="form-group">
+	  		<label for="comment">Commentaire:</label> <input type="text" name="comment" value="" />
+	  	</div>
+	  	<div class="form-group">
+	  		<label for="srv_name">Nom du service:</label> <input type="text" name="srv_name" value="" />
+	  	</div>
+	  	<div class="form-group">
+	  		<label for="mod_name">Module de routage:</label> <input type="text" name="mod_name" value="" />
+	  	</div>
+	  	<div class="form-group">
+	  		<label for="mod_params">Paramètre du routeur:</label> <input type="text" name="mod_params" value="" />
+	  	</div>
+	  	<div class="form-group">
+	  		<label for="from">Émetteur:</label> <input type="text" name="from" value="" />
+	  	</div>
+	  	<div class="form-group">
+	  		<label for="to">Destinataire:</label> <input type="text" name="to" value="" />
+	  	</div>
+	  </form>
+	</div>
 
 	<table id="routes" class="table table-striped table-bordered">
 	</table>
@@ -27,14 +50,15 @@
 	@parent
 
 	<script src="/jsgrid-1.1.0/jsgrid.min.js"></script>
-	<script src="/vendor/bootstrap-jqueryui/bootstrap-jqueryui.min.js"></script>
+	<!-- script src="/vendor/bootstrap-jqueryui/bootstrap-jqueryui.min.js"></script -->
+	<script src="/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
 	<script src="/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
 	<script src="/jquery-validation-1.14.0/dist/localization/messages_fr.js"></script>
 	<script src="/jquery-validation-1.14.0/dist/additional-methods.min.js"></script>
 	<script type="text/javascript">
 
 	$(function() {
-		
+
 		var db = {
 
 			loadData: function(filter) {
@@ -45,7 +69,6 @@
 					dataType: "json"
 				});
 			},
-
 	        insertItem: function(item) {
 	            return $.ajax({
 	                type: "POST",
@@ -54,7 +77,6 @@
 	                dataType: "json"
 	            });
 	        },
-	        
 	        updateItem: function(item) {
 	            return $.ajax({
 	                type: "PUT",
@@ -63,7 +85,6 @@
 	                dataType: "json"
 	            });
 	        },
-	        
 	        deleteItem: function(item) {
 	            return $.ajax({
 	                type: "DELETE",
@@ -92,36 +113,36 @@
 			paging: true,
 		    pageSize: 15,
 		    //pageButtonCount: 5,
-		    
+
 			controller: db,
 
 			noDataContent: "Not found",
 
 		    confirmDeleting: true,
 		    deleteConfirm: "Are you sure?",
-		 
-			fields: [
-			 		{ name: "id", type: "number" },
-					{ name: "comment", type: "text" },
-					{ name: "srv_name", type: "text" },
-					{ name: "mod_name", type: "text" },
-					{ name: "from", type: "text" },
-					{ name: "to", type: "text" },
-					{ name: "mod_params", type: "text" },
-		            { type: "control",
-		              modeSwitchButton: false,
-		              editButton: true,
 
-		              headerTemplate: function() {
-		              	return $("<button>").attr("type", "button").text("Add")
-                            .on("click", function () {
-                                showDetailsDialog("Add", {});
-                            });
-		                }
+			fields: [
+				{ name: "id", type: "number" },
+				{ name: "comment", type: "text" },
+				{ name: "srv_name", type: "text" },
+				{ name: "mod_name", type: "text" },
+				{ name: "from", type: "text" },
+				{ name: "to", type: "text" },
+				{ name: "mod_params", type: "text" },
+		        { type: "control",
+		        	modeSwitchButton: false,
+					editButton: true,
+					headerTemplate: function() {
+			            return $("<button>")
+			            	.attr("type", "button")
+			            	.text("Add")
+	                        .on("click", function () {
+	                        	showDetailsDialog("Add", {});
+	                    	});
 		            }
+                }
 			]
 		});
-
 
 	    $("#detailsDialog").dialog({
 	        autoOpen: false,
@@ -131,7 +152,7 @@
 	            $("#detailsForm").find(".error").removeClass("error");
 	        }
 	    });
-	 
+
 	    $("#detailsForm").validate({
 	        rules: {
 	            name: "required",
@@ -151,22 +172,23 @@
 	    });
 
 	    var formSubmitHandler = $.noop;
-	    
-	    var showDetailsDialog = function(dialogType, client) {
-	        $("#name").val(client.Name);
-	        $("#age").val(client.Age);
-	        $("#address").val(client.Address);
-	        $("#country").val(client.Country);
-	        $("#married").prop("checked", client.Married);
-	 
+
+	    var showDetailsDialog = function(dialogType, route) {
+	        $("#comment").val(route.comment);
+	        $("#srv_name").val(route.srv_name);
+	        $("#mod_name").val(route.mod_name);
+	        $("#from").val(route.from);
+	        $("#to").val(route.to);
+	        $("#mod_params").val(route.to);
+
 	        formSubmitHandler = function() {
-	            saveClient(client, dialogType === "Add");
+				saveClient( route, dialogType === "Add");
 	        };
-	 
-	        $("#detailsDialog").dialog("option", "title", dialogType + " Client")
+
+	        $("#detailsDialog").dialog("option", "title", dialogType + " Route")
 	                .dialog("open");
 	    };
-	 
+
 	    var saveClient = function(client, isNew) {
 	        $.extend(client, {
 	            Name: $("#name").val(),

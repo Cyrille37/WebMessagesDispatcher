@@ -31,34 +31,45 @@ class ApiController extends BaseController
 		return response()->json(array('status'=>'OK'));
 	}
 
+	/**
+	 * Routes GET : return all routes
+	 * @param \WMD\WebMessagesDispatcher $wmd
+	 */
 	public function routesGet(\WMD\WebMessagesDispatcher $wmd)
 	{
-		$routes = $wmd->getRouter()->getRoutes();
-		return response()->json( $routes );
+		return response()->json(
+			$wmd->getRouter()->getRoutes()
+		);
 	}
 
+	/**
+	 * Route update
+	 * @param Request $request
+	 * @param \WMD\WebMessagesDispatcher $wmd
+	 */
 	public function routesPut(Request $request, \WMD\WebMessagesDispatcher $wmd)
 	{
-		Log::debug( __METHOD__.' '.var_export($input,true) );
-		$input = $request->all();
-	
-		return response()->json(array('status'=>'OK'));
+		return response()->json(
+			$wmd->getRouter()->putRoute( $request->all() )
+		);
 	}
-	
+
+	/**
+	 * @param Request $request
+	 * @param \WMD\WebMessagesDispatcher $wmd
+	 */
 	public function routesPost(Request $request, \WMD\WebMessagesDispatcher $wmd)
 	{
-		Log::debug( __METHOD__.' '.var_export($input,true) );
-		$input = $request->all();
-	
-		return response()->json(array('status'=>'OK'));
+		return response()->json(
+			$wmd->getRouter()->postRoute( $request->all() )
+		);
 	}
-	
+
 	public function routesDelete(Request $request, \WMD\WebMessagesDispatcher $wmd)
 	{
-		Log::debug( __METHOD__.' '.var_export($input,true) );
-		$input = $request->all();
-	
-		return response()->json(array('status'=>'OK'));
+		return response()->json(
+			$wmd->getRouter()->deleteRoute( $request->all() )
+		);
 	}
-	
+
 }

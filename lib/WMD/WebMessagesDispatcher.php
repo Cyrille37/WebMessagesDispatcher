@@ -32,7 +32,7 @@ class WebMessagesDispatcher {
 	public function message_put(array $data)
 	{
 		// 1. Store the message
-		
+
 		/**
 		 * @var \App\Models\Message
 		 */
