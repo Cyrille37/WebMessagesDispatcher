@@ -6,7 +6,9 @@
 @section('content')
 
 <p class="bg-primary">
-	Hop là !
+	La base de données contient
+	<span id="messagesCount">...</span> message(s)
+	et <span id="routesCount">...</span> route(s).
 </p>
 
 @stop
@@ -17,10 +19,10 @@
 	<script type="text/javascript">
 
 	require(['jquery'], function($) {
-		//$.getJSON( '/api/stats', function( data ) {
-		//	$('#messagesCount').text( data.messagesCount );
-		//	$('#channelsCount').text( data.channelsCount );
-		//});
+		$.getJSON( '/api/stats', function( data ) {
+			$('#messagesCount').text( data.messagesCount );
+			$('#routesCount').text( data.routesCount );
+		});
 		console.log('coucou');
 	});
 	</script>

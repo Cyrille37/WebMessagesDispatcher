@@ -8,14 +8,17 @@ class DatabaseSeeder extends Seeder
     /**
      * Run the database seeds.
      *
+     * Do not forget to run "composer dumpautoload" after add a new seeder class file.
+     *
      * @return void
      */
-    public function run()
+	public function run()
     {
         Model::unguard();
 
-        // $this->call('UserTableSeeder');
+        $this->call('RoutesTableSeeder');
 
         Model::reguard();
     }
+
 }

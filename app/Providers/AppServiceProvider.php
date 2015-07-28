@@ -13,6 +13,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+		$this->app->singleton('\WMD\WebMessagesDispatcher', function () {
+			$wmd = new \WMD\WebMessagesDispatcher();
+			$wmd->registerModule('\WMD\Dispatchers\WordsCloud');
+    		return $wmd;
+    	});
     }
+
 }
