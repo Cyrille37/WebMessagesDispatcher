@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace WMD\Models;
 
 use \Illuminate\Database\Eloquent\Model;
 use \Esensi\Model\Contracts\ValidatingModelInterface;
@@ -11,10 +11,7 @@ use Prophecy\Argument\Token\IdenticalValueToken;
 
 class Route extends Model implements ValidatingModelInterface
 {	
-	/**
-	 * 
-	 */
-	use DatePresenter ;
+	//use DatePresenter ;
 
 	/**
 	 * https://github.com/esensi/model#validating-model-trait

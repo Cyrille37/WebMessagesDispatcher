@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace WMD\Models;
 
 use \Illuminate\Database\Eloquent\Model;
 use \Esensi\Model\Contracts\ValidatingModelInterface;
@@ -25,10 +25,7 @@ class Message extends Model implements ValidatingModelInterface
 	 * @property srv_at
 	 */
 
-	/**
-	 *
-	 */
-	use DatePresenter ;
+	//use DatePresenter ;
 
 	/**
 	 * https://github.com/esensi/model#validating-model-trait

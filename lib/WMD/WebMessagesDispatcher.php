@@ -34,9 +34,9 @@ class WebMessagesDispatcher {
 		// 1. Store the message
 
 		/**
-		 * @var \App\Models\Message
+		 * @var \WMD\Models\Message
 		 */
-		$msg = \App\Models\Message::create( $data );
+		$msg = \WMD\Models\Message::create( $data );
 		$ok = $msg->save();
 		if( ! $ok){
 			throw new \Exception('Failed to add message');

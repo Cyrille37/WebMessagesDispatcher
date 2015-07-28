@@ -10,7 +10,7 @@ class RoutesTableSeeder extends Seeder
 	{
 		DB::table('routes')->delete();
 
-        $route = \App\Models\Route::create([
+        $route = \WMD\Models\Route::create([
             'comment' => 'Tous les SMS sont envoyés à WordsCloud',
             'to' => '*',
             'from' => '*',

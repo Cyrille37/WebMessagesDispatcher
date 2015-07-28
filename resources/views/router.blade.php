@@ -17,7 +17,7 @@
 <h1>Router</h1>
 
 	<div id="detailsDialog" title="Basic dialog">
-	  <form id="detailsForm" class="form-horizontal">
+	  <form id="editForm" class="form-horizontal">
 	  	<div class="form-group">
 	  		<label for="comment">Commentaire:</label>
 	  		<input type="text" name="comment" id="comment" class="form-control" value="" />
@@ -44,12 +44,36 @@
 	  		<input type="text" name="to" id="to" class="form-control" value="" />
 	  		<p class="help-block">une "*" pour n'importe quel destinataire (tous).</p>
 	  	</div>
-	  	<button type="submit" class="btn btn-primary" id="save">Save</button>
+	  	<button type="submit" id="save" class="btn btn-primary">Save</button>
 	  </form>
 	</div>
 
 	<table id="routesGrid" class="table table-striped table-bordered">
 	</table>
+
+	<h3>Route test</h3>
+	<form id="testRouteForm" class="form-inline">
+		<div class="form-group">
+			<label for="test_srv_name">Srvive:</label>
+			<select name="test_srv_name" id="test_srv_name" class="form-control"></select>
+		</div>
+		<div class="form-group">
+			<label for="test_mod_name">Srvive:</label>
+			<select name="test_mod_name" id="test_mod_name" class="form-control"></select>
+		</div>
+	  	<div class="form-group">
+	  		<label for="test_from">Émetteur:</label>
+	  		<input type="text" name="test_from" id="test_from" class="form-control" value="" />
+	  	</div>
+	  	<div class="form-group">
+	  		<label for="test_to">Destinataire:</label>
+	  		<input type="text" name="test_to" id="test_to" class="form-control" value="" />
+	  	</div>
+		<button type="button" id="test_route" class="btn btn-default">Test</button>
+		<span id="test_success" class="label label-success">Message distribué</span>
+		<span id="test_failed" class="label label-warning">Message non distribué</span>
+		<span id="test_notdone" class="label label-default">...</span>
+	</form>
 
 @stop
 
@@ -100,13 +124,15 @@
 		function loadRouteServices() {
 			return $.getJSON('/api/routeServices', function(data){
 				db.routeServices = data ;
-				formSelectFill( 'srv_name', data );
+				formSelectFill( '#srv_name', data );
+				formSelectFill( '#test_srv_name', data );
 			});
 		}
 		function loadRouteModules() {
 			return $.getJSON('/api/routeModules', function(data){
 				db.routeModules = data ;
-				formSelectFill( 'mod_name', data );
+				formSelectFill( '#mod_name', data );
+				formSelectFill( '#test_mod_name', data );
 			});
 		}
 
@@ -115,6 +141,7 @@
 			// allRequestsCompleteCallback	
 		    function(res1, res2) {
 				setupGrid();
+				setupTestForm();
 			},
 		    // someRequestFailedCallback()
 		    function(data) {
@@ -124,7 +151,7 @@
 
 	});
 
-	function formSelectFill( selectId, data, options ){
+	function formSelectFill( selectSelector, data, options ){
 
 		var fieldValue = options && options.fieldValue ? options.fieldValue : 'id' ;
 		var fieldLabel = options && options.fieldLabel ? options.fieldLabel : 'label' ;
@@ -132,7 +159,7 @@
 	    for (var i = 0; i < data.length; i++) {
 	        options.push('<option value="',data[i][fieldValue], '">',data[i][fieldLabel], '</option>');
 	    }
-	    $('#'+selectId).html(options.join(''));
+	    $(selectSelector).html(options.join(''));
 	}
 
 	function setupGrid(){
@@ -191,8 +218,8 @@
 	        autoOpen: false,
 	        width: 400,
 	        close: function() {
-	            $('#detailsForm').validate().resetForm();
-	            $('#detailsForm').find('.error').removeClass('error');
+	            $('#editForm').validate().resetForm();
+	            $('#editForm').find('.error').removeClass('error');
 	        }
 	    });
 
@@ -216,7 +243,7 @@
 				.dialog('open');
 	    };
 
-	    $('#detailsForm').validate({
+	    $('#editForm').validate({
 	        rules: {
 				comment: 'required',
 				srv_name: { required: true },
@@ -238,7 +265,6 @@
 		});
 
 	    var saveClient = function(data, isNew) {
-console.log('saveClient()');
 
 			$.extend(data, {
 	            comment: $('#comment').val(),
@@ -253,5 +279,36 @@ console.log('saveClient()');
 	    };
 	}
 
+	function setupTestForm(){
+
+		$('#test_success').hide();
+		$('#test_failed').hide();
+		$('#test_notdone').show();
+		$('#test_route').click(function(){
+			$.getJSON('/api/routeTest',
+				{
+					srv_name: $('#test_srv_name').val(),
+					mod_name: $('#test_mod_name').val(),
+					from: $('#test_from').val(),
+					to: $('#test_to').val(),
+				},
+				function(data){
+					$('#test_notdone').hide();
+					if( data === true ){
+						$('#test_success').show();
+						$('#test_failed').hide();
+					}else{
+						$('#test_success').hide();
+						$('#test_failed').show();
+					}
+				});
+		});
+		$('#testRouteForm').change(function(data){
+			$('#test_success').hide();
+			$('#test_failed').hide();
+			$('#test_notdone').show();
+		});
+
+	}
 	</script>
 @stop

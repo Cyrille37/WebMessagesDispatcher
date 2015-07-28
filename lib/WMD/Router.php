@@ -12,12 +12,12 @@ class Router {
 
 	public function getRoutes()
 	{
-		return \App\Models\Route::all();
+		return \WMD\Models\Route::all();
 	}
 
 	public function getRoutesCount()
 	{
-		return \App\Models\Route::all()->count();
+		return \WMD\Models\Route::all()->count();
 	}
 
 	public function putRoute( $data )
@@ -26,7 +26,7 @@ class Router {
 			$id = $data['id'];
 		else
 			$id = $data ;
-		$route = \App\Models\Route::findOrFail( $id );
+		$route = \WMD\Models\Route::findOrFail( $id );
 		$route->update($data);
 		$ok = $route->save();
 		if( ! $ok){
@@ -39,9 +39,9 @@ class Router {
 	{
 		/**
 		 * 
-		 * @var \App\Models\Route
+		 * @var \WMD\Models\Route
 		 */
-		$route = \App\Models\Route::create( $data );
+		$route = \WMD\Models\Route::create( $data );
 		$ok = $route->save();
 		if( ! $ok){
 			throw new \Exception('Failed to create route ('.$route->getErrors() );
@@ -59,13 +59,13 @@ class Router {
 			$id = $data['id'];
 		else
 			$id = $data ;
-		$route = \App\Models\Route::findOrFail( $id );
+		$route = \WMD\Models\Route::findOrFail( $id );
 		return $route->delete();
 	}
 
 	public function is_module_dispatch($srvName, $modName, $to, $from)
 	{
-		$routes = \App\Models\Route::all()->where('srv_name', $srvName)->where('mod_name',$modName);
+		$routes = \WMD\Models\Route::all()->where('srv_name', $srvName)->where('mod_name',$modName);
 
 		// Parse results several times to organize priority
 		// 1. FROM && TO
